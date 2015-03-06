@@ -1,0 +1,19 @@
+{
+  "name": "api-angel",
+  "version": "0.1.0",
+  "description": "Simple API mocking.",
+  "repository": "https://github.com/workivate/api-angel",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha --reporter spec"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.12.2",
+    "request": "^2.53.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.1.0"
+  }
+}
