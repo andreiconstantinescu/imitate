@@ -1,6 +1,8 @@
 imitate
 =========
 
+[![Build Status](https://travis-ci.org/workivate/imitate.svg)](https://travis-ci.org/workivate/imitate)
+
 `imitate` is a REST API mocking tool. It offers a simple workflow for:
 
 - Proxying an existing API;
