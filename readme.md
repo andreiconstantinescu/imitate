@@ -2,6 +2,7 @@ imitate
 =========
 
 [![Build Status](https://travis-ci.org/workivate/imitate.svg)](https://travis-ci.org/workivate/imitate)
+[![Coverage Status](https://coveralls.io/repos/workivate/imitate/badge.svg?branch=master)](https://coveralls.io/r/workivate/imitate?branch=master)
 
 `imitate` is a REST API mocking tool. It offers a simple workflow for:
 
