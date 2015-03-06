@@ -1,13 +1,13 @@
 {
-  "name": "api-angel",
+  "name": "imitate",
   "version": "0.1.0",
-  "description": "Simple API mocking.",
-  "repository": "https://github.com/workivate/api-angel",
+  "description": "Fast API mocking tool.",
+  "repository": "https://github.com/workivate/imitate",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --reporter spec"
   },
-  "author": "",
+  "author": "Theodor Vararu <theo@vararu.org>",
   "license": "MIT",
   "dependencies": {
     "express": "^4.12.2",

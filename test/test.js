@@ -4,14 +4,14 @@ var assert = require('assert');
 
 var _ = require('lodash');
 var request = require('request');
-var apiAngel = require('../index.js');
+var imitate = require('../index.js');
 
-describe('apiAngel package', function() {
+describe('imitate package', function() {
   it('should expose proxyServer', function() {
-    assert.notEqual(apiAngel.proxyServer, undefined);
+    assert.notEqual(imitate.proxyServer, undefined);
   });
   it('should expose mockServer', function() {
-    assert.notEqual(apiAngel.mockServer, undefined);
+    assert.notEqual(imitate.mockServer, undefined);
   });
 });
 
@@ -21,7 +21,7 @@ describe('proxyServer', function() {
   before(function() {
     // Start a dummy API that our tests will be pinging.
     require('./mock/api.js');
-    proxyServer = apiAngel.proxyServer;
+    proxyServer = imitate.proxyServer;
   });
 
   describe('options', function() {
@@ -96,7 +96,7 @@ describe('mockServer', function() {
   var mockServer;
 
   before(function() {
-    mockServer = apiAngel.mockServer;
+    mockServer = imitate.mockServer;
   });
 
   describe('regular usage', function() {
