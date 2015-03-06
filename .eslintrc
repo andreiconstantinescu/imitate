@@ -3,7 +3,7 @@
     "amd": true,
     "browser": true,
     "jquery": true,
-    "jasmine": true,
+    "mocha": true,
     "node": true
   },
   "globals": {

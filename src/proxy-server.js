@@ -1,60 +1,67 @@
-// Proxies the API and generates an endpoints map.
 'use strict';
 var fs = require('fs');
 var express = require('express');
 var request = require('request');
 
-// TODO: Refactor to work with any API endpoint.
-var API_URL = 'http://test.com';
+function proxyServer(options) {
+  if (!options) {
+    throw new Error('proxyServer called without options object.');
+  } else {
+    if (!options.url) {
+      throw new Error('proxyServer called without specifying `url`.');
+    }
+  }
+  var API_URL = options.url;
+  var HOST = options.host || 'localhost';
+  var PORT = options.port || 3000;
+  var SILENT = options.silent || false;
+  var OUTPUT = options.output || 'endpoints.json';
 
-var OUTPUT_FILE = './endpoints.json';
-
-var app = express();
-
-var store = {};
-
-// Use all incoming requests.
-app.all('*', function(req, res) {
-  // Unique-enough key for our store.
-  // Example: GET /admin-panel/dashboard/engagement
-  var key = req.method + ' ' + req.url;
-
-  // Outgoing url.
-  var url = API_URL + req.url;
-
-  // TODO: hack, should not have to request twice.
-  req.pipe(request(url)).pipe(res);
-
-  // OPTIONS requests return 200 OK.
-  if (req.method === 'OPTIONS') {
-    return;
+  function log(message) {
+    if (SILENT) { return; }
+    console.log(message);
   }
 
-  console.log('Proxying endpoint: ' + key);
-  var data = [];
-  req.pipe(request(url))
-    .on('data', function(buf) {
-      // request(url) sends us chunks of data, which we just push into the array.
-      data.push(buf.toString());
-    })
-    .on('end', function() {
-      store[key] = {
-        method: req.method,
-        url: req.url,
-        // Join all of our chunks.
-        response: data.join(''),
-      };
-      // Write to the file asynchronously.
-      fs.writeFile(OUTPUT_FILE, JSON.stringify(store));
-    });
-});
+  var app = express();
 
-var invokedFromCLI = (require.main === module);
+  var store = {};
 
-if (invokedFromCLI) {
-  app.listen(4000, 'localhost');
-  console.log('API proxy server listening on http://' + 'localhost' + ':' + 4000);
-} else {
-  // Invoked from gulp.
-  module.exports = app;
+  app.all('*', function(req, res) {
+    // Unique-enough key for our store. Example: GET /admin-panel/dashboard/engagement
+    var key = req.method + ' ' + req.url;
+
+    var url = API_URL + req.url;
+
+    // TODO: hack, should not have to request twice.
+    req.pipe(request(url)).pipe(res);
+
+    // OPTIONS requests return 200 OK.
+    if (req.method === 'OPTIONS') {
+      return;
+    }
+
+    log('Proxying endpoint: ' + key);
+    var data = [];
+    req.pipe(request(url))
+      .on('data', function(buf) {
+        data.push(buf.toString());
+      })
+      .on('end', function() {
+        store[key] = {
+          method: req.method,
+          url: req.url,
+          response: data.join(''),
+        };
+      });
+  });
+
+  var serverInstance = app.listen(PORT, HOST);
+
+  serverInstance.on('close', function() {
+    fs.writeFileSync(OUTPUT, JSON.stringify(store));
+  });
+
+  return serverInstance;
 }
+
+module.exports = proxyServer;
