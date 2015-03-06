@@ -2,4 +2,8 @@ language: node_js
 node_js:
   - 0.12.0
 after_script:
-  - cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - cat coverage/lcov.info | tee >(./node_modules/coveralls/bin/coveralls.js) >(./node_modules/codeclimate-test-reporter/bin/codeclimate.js) >/dev/null
+addons:
+  code_climate:
+    repo_token:
+      secure: "SnyIX9GbU6QJAOxcikLjiTCSBiF6Cm45D24Xk0d6C660GVhsDifIX6HBSMKWz/rz7Mtg6IEWMCh5fal7MWFPPUB1XFRnlqffWK4Mb8yVlso6vbFndYs44xQE/dlpWN47MYN4M4MRlAWedL6yPtsef5rs8a+q5cc5U+UaXJkPm/c="
