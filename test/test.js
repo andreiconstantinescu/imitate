@@ -99,7 +99,35 @@ describe('mockServer', function() {
     mockServer = apiAngel.mockServer;
   });
 
-  it('should expose .listen method', function() {
-    assert.notEqual(mockServer.listen, undefined);
+  describe('regular usage', function() {
+    var serverInstance;
+    var PORT = 4000;
+    var HOST = 'localhost';
+    var INPUT = './endpoints.json.tmp';
+    var baseUrl = 'http://' + HOST + ':' + PORT;
+
+    before(function() {
+      serverInstance = mockServer({
+        port: PORT,
+        host: HOST,
+        input: INPUT,
+        silent: true,
+      });
+    });
+
+    it('should return GET /', function(done) {
+      var expectedResponse = JSON.stringify({
+        hello: 'world',
+      });
+
+      request(baseUrl, function(error, response, body) {
+        assert.equal(body, expectedResponse);
+        done();
+      });
+    });
+
+    after(function(done) {
+      serverInstance.close(function() { done(); });
+    });
   });
 });

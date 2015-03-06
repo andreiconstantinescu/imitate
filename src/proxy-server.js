@@ -13,7 +13,7 @@ function proxyServer(options) {
   }
   var API_URL = options.url;
   var HOST = options.host || 'localhost';
-  var PORT = options.port || 3000;
+  var PORT = options.port || 4000;
   var SILENT = options.silent || false;
   var OUTPUT = options.output || 'endpoints.json';
 
