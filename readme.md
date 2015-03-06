@@ -1,8 +1,11 @@
 imitate
 =========
 
+[![npm version](https://badge.fury.io/js/imitate.svg)](http://badge.fury.io/js/imitate)
 [![Build Status](https://travis-ci.org/workivate/imitate.svg)](https://travis-ci.org/workivate/imitate)
 [![Coverage Status](https://coveralls.io/repos/workivate/imitate/badge.svg?branch=master)](https://coveralls.io/r/workivate/imitate?branch=master)
+[![Code Climate](https://codeclimate.com/github/workivate/imitate/badges/gpa.svg)](https://codeclimate.com/github/workivate/imitate)
+[![Dependency Status](https://david-dm.org/workivate/imitate.svg)](https://david-dm.org/workivate/imitate)
 
 `imitate` is a REST API mocking tool. It offers a simple workflow for:
 
