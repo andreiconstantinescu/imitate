@@ -1,7 +1,8 @@
 // Mocks the API by using a pre-generated endpoints file.
+'use strict';
 var _ = require('lodash');
 var express = require('express');
-var endpoints = require('./endpoints.json');
+var endpoints = []; // require('./endpoints.json');
 
 var app = express();
 
@@ -39,13 +40,12 @@ _.each(endpoints, function(endpoint) {
   }
 });
 
-var server = app.listen(4000, 'localhost');
-
 var invokedFromCLI = (require.main === module);
 
 if (invokedFromCLI) {
+  app.listen(4000, 'localhost');
   console.log('API mock server listening on http://' + 'localhost' + ':' + 4000);
 } else {
   // Invoked from gulp.
-  module.exports = server;
+  module.exports = app;
 }

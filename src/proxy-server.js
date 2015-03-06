@@ -1,4 +1,5 @@
 // Proxies the API and generates an endpoints map.
+'use strict';
 var fs = require('fs');
 var express = require('express');
 var request = require('request');
@@ -48,5 +49,12 @@ app.all('*', function(req, res) {
     });
 });
 
-app.listen(4000, 'localhost');
-console.log('API proxy server listening on http://' + 'localhost' + ':' + 4000);
+var invokedFromCLI = (require.main === module);
+
+if (invokedFromCLI) {
+  app.listen(4000, 'localhost');
+  console.log('API proxy server listening on http://' + 'localhost' + ':' + 4000);
+} else {
+  // Invoked from gulp.
+  module.exports = app;
+}
