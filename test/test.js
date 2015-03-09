@@ -130,4 +130,35 @@ describe('mockServer', function() {
       serverInstance.close(function() { done(); });
     });
   });
+
+  describe('custom headers', function() {
+    var serverInstance;
+    var PORT = 4000;
+    var HOST = 'localhost';
+    var INPUT = './endpoints.json.tmp';
+    var baseUrl = 'http://' + HOST + ':' + PORT;
+    var expectedHeaders = 'My-Special-Snowflake-Headers';
+
+    before(function() {
+      serverInstance = mockServer({
+        accessControlAllowHeaders: 'My-Special-Snowflake-Headers',
+        port: PORT,
+        host: HOST,
+        input: INPUT,
+        silent: true,
+      });
+    });
+
+    it('should return GET / with custom headers', function(done) {
+      request(baseUrl, function(error, response) {
+        var headers = response.headers['access-control-allow-headers'];
+        assert.equal(headers, expectedHeaders);
+        done();
+      });
+    });
+
+    after(function(done) {
+      serverInstance.close(function() { done(); });
+    });
+  });
 });
