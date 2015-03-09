@@ -9,6 +9,8 @@ function mockServer(options) {
   var PORT = options.PORT || 4000;
   var SILENT = options.silent || false;
   var INPUT = options.input || 'endpoints.json';
+  var ACCESS_CONTROL_ALLOW_HEADERS = options.accessControlAllowHeaders ||
+    'Content-Type, Authorization, Content-Length, X-Requested-With';
 
   function log(message) {
     if (SILENT) { return; }
@@ -22,7 +24,7 @@ function mockServer(options) {
   function allowCrossDomain(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    res.header('Access-Control-Allow-Headers', ACCESS_CONTROL_ALLOW_HEADERS);
 
     if (req.method === 'OPTIONS') {
       res.sendStatus(200);
