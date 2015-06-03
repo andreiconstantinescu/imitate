@@ -42,6 +42,54 @@ describe('proxyServer', function() {
         done();
       }
     });
+
+  });
+
+  describe('logging', function() {
+    var serverInstance;
+    var PORT = 4001;
+    var HOST = 'localhost';
+    var OUTPUT = './endpoints.json.tmp';
+    var baseUrl = 'http://' + HOST + ':' + PORT;
+    var targetUrl = 'http://' + HOST + ':3000';
+    var options = {
+      port: PORT,
+      host: HOST,
+      output: OUTPUT,
+      url: targetUrl,
+      silent: false
+    };
+
+    before(function() {
+      serverInstance = proxyServer(options);
+    });
+
+    it('should log proxying GET /', function(done) {
+      var expectedResponse = JSON.stringify({
+        hello: 'world',
+      });
+
+      request(baseUrl, function(error, response, body) {
+        assert.equal(body, expectedResponse);
+        done();
+      });
+    });
+
+    it('should log proxying POST /', function(done) {
+      var expectedResponse = JSON.stringify({
+        hello: 'world',
+      });
+
+      request(
+        {url: baseUrl,
+        method: 'POST',
+        form: {hello: 'world'}
+      }, function(error, response, body) {
+        assert.equal(body, expectedResponse);
+        done();
+      });
+    });
+
   });
 
   describe('regular usage', function() {
@@ -73,9 +121,40 @@ describe('proxyServer', function() {
       });
     });
 
+    it('should proxy POST /', function(done) {
+      var expectedResponse = JSON.stringify({
+        hello: 'world',
+      });
+
+      request({
+        url: baseUrl,
+        method: 'POST',
+        form: {hello: 'world'}
+      }, function(error, response, body) {
+        assert.equal(body, expectedResponse);
+        done();
+      });
+    });
+
+    it('should return 200 on OPTIONS request', function(done) {
+      request({
+        url: baseUrl,
+        method: 'OPTIONS'
+      }, function(error, response) {
+        assert.equal(response.statusCode, 200);
+        done();
+      });
+    });
+
     it('should write correct schema in endpoints.json', function(done) {
-      var expectedData = {
+      var expectedDataGET = {
         method: 'GET',
+        url: '/',
+        response: '{"hello":"world"}',
+      };
+
+      var expectedDataPOST = {
+        method: 'POST',
         url: '/',
         response: '{"hello":"world"}',
       };
@@ -84,8 +163,10 @@ describe('proxyServer', function() {
         var content = fs.readFileSync(OUTPUT);
         var data = JSON.parse(content);
 
-        assert.equal(_.keys(data).length, 1);
-        assert.deepEqual(data['GET /'], expectedData);
+
+        assert.equal(_.keys(data).length, 2);
+        assert.deepEqual(data['GET /'], expectedDataGET);
+        assert.deepEqual(data['POST /'], expectedDataPOST)
         done();
       });
     });
@@ -124,6 +205,55 @@ describe('mockServer', function() {
         assert.equal(body, expectedResponse);
         done();
       });
+    });
+
+    it('should send 200 on OPTIONS request', function (done) {
+      request({
+        url: baseUrl,
+        method: 'OPTIONS'
+      }, function(error, response) {
+          assert.equal(response.statusCode, 200);
+          done();
+      });
+    });
+
+    it('should POST to /', function(done) {
+      var expectedResponse = JSON.stringify({
+        hello: 'world',
+      });
+      request({
+        url: baseUrl,
+        method: 'POST',
+        data: {hello: 'world'}
+      }, function(error, response, body) {
+        assert.equal(body, expectedResponse);
+        done();
+      });
+    });
+
+    after(function(done) {
+      serverInstance.close(function() { done(); });
+    });
+
+  });
+  describe('logging', function () {
+    var serverInstance;
+    var PORT = 4000;
+    var HOST = 'localhost';
+    var INPUT = './endpoints.json.tmp';
+    var baseUrl = 'http://' + HOST + ':' + PORT;
+
+    before(function() {
+      serverInstance = mockServer({
+        port: PORT,
+        host: HOST,
+        input: INPUT,
+        silent: false
+      });
+    });
+
+    it('should defining endpoints', function (done) {
+      done();
     });
 
     after(function(done) {
